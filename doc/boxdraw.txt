@@ -5,10 +5,29 @@ INTRODUCTION                                    *boxdraw*
 The vim-boxdraw plugin makes it easy to draw simple ASCII diagrams in
 |blockwise-visual| mode. The basic idea is simple:
 
-- Select a rectangle on the screen
+- Enable boxdraw mode.
+- Select a rectangle on the screen.
 - Invoke a draw command.
   
 All commands are mapped to the `+` prefix. See |boxdraw-mappings| for details.
+
+
+BOXDRAW MODE                                    *boxdraw-mode*
+The vim-boxdraw only works in the boxdraw-mode. You can use Command
+|BoxdrawEnable| to enable the boxdraw-mode, and |BoxdrawDisable| to disable
+the boxdraw-mode.
+
+:BoxdrawEnable                                  *BoxdrawEnable*
+Enable the boxdraw-mode.
+
+:BoxdrawDisable                                 *BoxdrawDisable*
+Disable the boxdraw-mode.
+
+:BoxdrawToggle                                  *BoxdrawToggle*
+Toggle the boxdraw-mode.
+
+
+BOXDRAW MAPPINGS                                *boxdraw-mappings*
 
 DRAWING RECTANGLES                              *boxdraw-rectangles*
 
@@ -20,6 +39,7 @@ DRAWING RECTANGLES                              *boxdraw-rectangles*
 
                                                 *boxdraw-+c*
 +c                      Fill the rectangle with a label.
+
 
 DRAWING LINES                                   *boxdraw-lines*
 
@@ -137,14 +157,26 @@ position of the selection.
                         ........ => |.......     ........ => |.......
                         2.......    v.......     1.......    v.......
 
+
 SELECTING OBJECTS                               *boxdraw-select*
 
 Select commands also work in |blockwise-visual| mode: start a selection,
 then press one of the following mappings to select an object:
 
-                                                *boxdraw-+io*
-+io                     Select current rectangle, without borders.
+                                                *boxdraw-io*
+io                     Select current rectangle, without borders.
 
-                                                *boxdraw-+ao*
-+ao                     Select current rectangle, with borders.
+                                                *boxdraw-ao*
+ao                     Select current rectangle, with borders.
 
+
+BOXDRAW STATUS                                  *boxdraw-status*
+BOXDRAW AIRLINE                                 *boxdraw-airline*
+It's easy to add a part to airline status line. You only need to call
+`boxdraw#AirlineStatus` after airline is initialzed. It will add a text(`BD`) to
+warning section. 
+eg: >
+  autocmd! User AirlineAfterInit call boxdraw#AirlineStatus()
+<
+
+" vim:ft=help:iskeyword+=-:iskeyword+=58:iskeyword+=#

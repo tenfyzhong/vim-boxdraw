@@ -196,12 +196,11 @@ nnoremap <silent> <Plug>(boxdraw-toggle) :<C-u>BoxdrawToggle<cr>
 
 " status line
 function! BoxdrawStatusLine()
-    return s:enabled ? 'BM' : ''
+    return s:enabled ? 'B' : ''
 endfunction
 
 function! boxdraw#AirlineStatus()
     call airline#parts#define_function('boxdraw', 'BoxdrawStatusLine')
-    call airline#parts#define_accent('boxdraw', 'green')
     let g:airline_section_warning .= airline#section#create_right(['boxdraw'])
 endfunction
 

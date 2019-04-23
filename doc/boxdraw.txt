@@ -173,7 +173,7 @@ ao                     Select current rectangle, with borders.
 BOXDRAW STATUS                                  *boxdraw-status*
 BOXDRAW AIRLINE                                 *boxdraw-airline*
 It's easy to add a part to airline status line. You only need to call
-`boxdraw#AirlineStatus` after airline is initialzed. It will add a text(`BD`) to
+`boxdraw#AirlineStatus` after airline is initialzed. It will add a text(`B`) to
 warning section. 
 eg: >
   autocmd! User AirlineAfterInit call boxdraw#AirlineStatus()

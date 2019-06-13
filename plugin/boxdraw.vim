@@ -65,39 +65,39 @@ endfunction
 " -------- Keyboard mappings --------
 
 let s:mappings = {
-            \ '+o': 'call boxdraw#Draw("+o", [])',
-            \ '+O': 'call boxdraw#DrawWithLabel("+O", [])',
-            \ '+[O': 'call boxdraw#DrawWithLabel("+[O", [])',
-            \ '+]O': 'call boxdraw#DrawWithLabel("+]O", [])',
-            \ '+{[O': 'call boxdraw#DrawWithLabel("+{[O", [])',
-            \ '+{]O': 'call boxdraw#DrawWithLabel("+{]O", [])',
-            \ '+}[O': 'call boxdraw#DrawWithLabel("+}[O", [])',
-            \ '+}]O': 'call boxdraw#DrawWithLabel("+}]O", [])',
-            \ '+c': 'call boxdraw#DrawWithLabel("+c", [])',
-            \ '+{c': 'call boxdraw#DrawWithLabel("+{c", [])',
-            \ '+}c': 'call boxdraw#DrawWithLabel("+}c", [])',
-            \ '+{[c': 'call boxdraw#DrawWithLabel("+{[c", [])',
-            \ '+{]c': 'call boxdraw#DrawWithLabel("+{]c", [])',
-            \ '+}[c': 'call boxdraw#DrawWithLabel("+}[c", [])',
-            \ '+}]c': 'call boxdraw#DrawWithLabel("+}]c", [])',
-            \ '+[c': 'call boxdraw#DrawWithLabel("+[c", [])',
-            \ '+]c': 'call boxdraw#DrawWithLabel("+]c", [])',
-            \ '+D': 'echo boxdraw#debug()',
-            \ '+>': 'call boxdraw#Draw("+>", [])',
-            \ '+<': 'call boxdraw#Draw("+<", [])',
-            \ '+v': 'call boxdraw#Draw("+v", [])',
-            \ '+V': 'call boxdraw#Draw("+v", [])',
-            \ '+^': 'call boxdraw#Draw("+^", [])',
-            \ '++>': 'call boxdraw#Draw("++>", [])',
-            \ '++<': 'call boxdraw#Draw("++<", [])',
-            \ '++v': 'call boxdraw#Draw("++v", [])',
-            \ '++V': 'call boxdraw#Draw("++v", [])',
-            \ '++^': 'call boxdraw#Draw("++^", [])',
-            \ '+-': 'call boxdraw#Draw("+-", [])',
-            \ '+\|': 'call boxdraw#Draw("+\|", [])',
-            \ '+_': 'call boxdraw#Draw("+_", [])',
-            \ 'ao': 'call boxdraw#Select("ao")',
-            \ 'io': 'call boxdraw#Select("io")',
+            \ '+o': ':<c-u>call boxdraw#Draw("+o", [])<cr>',
+            \ '+O': ':<c-u>call boxdraw#DrawWithLabel("+O", [])<cr>',
+            \ '+[O': ':<c-u>call boxdraw#DrawWithLabel("+[O", [])<cr>',
+            \ '+]O': ':<c-u>call boxdraw#DrawWithLabel("+]O", [])<cr>',
+            \ '+{[O': ':<c-u>call boxdraw#DrawWithLabel("+{[O", [])<cr>',
+            \ '+{]O': ':<c-u>call boxdraw#DrawWithLabel("+{]O", [])<cr>',
+            \ '+}[O': ':<c-u>call boxdraw#DrawWithLabel("+}[O", [])<cr>',
+            \ '+}]O': ':<c-u>call boxdraw#DrawWithLabel("+}]O", [])<cr>',
+            \ '+c': ':<c-u>call boxdraw#DrawWithLabel("+c", [])<cr>',
+            \ '+{c': ':<c-u>call boxdraw#DrawWithLabel("+{c", [])<cr>',
+            \ '+}c': ':<c-u>call boxdraw#DrawWithLabel("+}c", [])<cr>',
+            \ '+{[c': ':<c-u>call boxdraw#DrawWithLabel("+{[c", [])<cr>',
+            \ '+{]c': ':<c-u>call boxdraw#DrawWithLabel("+{]c", [])<cr>',
+            \ '+}[c': ':<c-u>call boxdraw#DrawWithLabel("+}[c", [])<cr>',
+            \ '+}]c': ':<c-u>call boxdraw#DrawWithLabel("+}]c", [])<cr>',
+            \ '+[c': ':<c-u>call boxdraw#DrawWithLabel("+[c", [])<cr>',
+            \ '+]c': ':<c-u>call boxdraw#DrawWithLabel("+]c", [])<cr>',
+            \ '+D': ':<c-u>echo boxdraw#debug()<cr>',
+            \ '+>': ':<c-u>call boxdraw#Draw("+>", [])<cr>',
+            \ '+<': ':<c-u>call boxdraw#Draw("+<", [])<cr>',
+            \ '+v': ':<c-u>call boxdraw#Draw("+v", [])<cr>',
+            \ '+V': ':<c-u>call boxdraw#Draw("+v", [])<cr>',
+            \ '+^': ':<c-u>call boxdraw#Draw("+^", [])<cr>',
+            \ '++>': ':<c-u>call boxdraw#Draw("++>", [])<cr>',
+            \ '++<': ':<c-u>call boxdraw#Draw("++<", [])<cr>',
+            \ '++v': ':<c-u>call boxdraw#Draw("++v", [])<cr>',
+            \ '++V': ':<c-u>call boxdraw#Draw("++v", [])<cr>',
+            \ '++^': ':<c-u>call boxdraw#Draw("++^", [])<cr>',
+            \ '+-': ':<c-u>call boxdraw#Draw("+-", [])<cr>',
+            \ '+\|': ':<c-u>call boxdraw#Draw("+\|", [])<cr>',
+            \ '+_': ':<c-u>call boxdraw#Draw("+_", [])<cr>',
+            \ 'ao': ':<c-u>call boxdraw#Select("ao")<cr>',
+            \ 'io': ':<c-u>call boxdraw#Select("io")<cr>',
             \}
 
 let s:stores = {}
@@ -105,77 +105,36 @@ let s:enabled = 0
 let s:virtualedit = &virtualedit
 
 function! s:map(mappings)
+    let result = []
     for [lhs, rhs] in items(a:mappings)
-        exec printf('vnoremap %s :<C-u>%s<cr>', lhs, rhs)
+        let mapping = mode#mapping#create('v', 1, 0, lhs, rhs)
+        call add(result, mapping)
     endfor
+    return result
 endfunction
 
-function! s:store_map(mappings)
-    let l:stores = {}
-    for lhs in keys(a:mappings)
-        for i in range(len(lhs))
-            let to_store_lhs = lhs[:i]
-            if has_key(l:stores, to_store_lhs)
-                continue
-            endif
-            let d = maparg(to_store_lhs, 'v', 0, 1)
-            if len(d) != 0
-                let l:stores[to_store_lhs] = d
-                exec printf('vunmap %s', to_store_lhs)
-            endif
-        endfor
-    endfor
-    return l:stores
-endfunction
-
-function! s:restore_mappings(mappings) abort
-    for mapping in values(a:mappings)
-        if !has_key(mapping, 'unmapped') && !empty(mapping)
-            exe     mapping.mode
-                        \ . (mapping.noremap ? 'noremap   ' : 'map ')
-                        \ . (mapping.buffer  ? ' <buffer> ' : '')
-                        \ . (mapping.expr    ? ' <expr>   ' : '')
-                        \ . (mapping.nowait  ? ' <nowait> ' : '')
-                        \ . (mapping.silent  ? ' <silent> ' : '')
-                        \ .  mapping.lhs
-                        \ . ' '
-                        \ . substitute(mapping.rhs, '<SID>', '<SNR>'.mapping.sid.'_', 'g')
-
-        elseif has_key(mapping, 'unmapped')
-            sil! exe mapping.mode.'unmap '
-                        \ .(mapping.buffer ? ' <buffer> ' : '')
-                        \ . mapping.lhs
-        endif
-    endfor
-endfunction
-
-
-function! s:unmap(mappings)
-    for lhs in keys(a:mappings)
-        exec printf('vunmap %s', lhs)
-    endfor
+let s:inited = 0
+function! s:init()
+    if !s:inited
+        try
+            call mode#add('boxdraw', 'B', <SID>map(s:mappings))
+            let s:inited = 1
+        catch /^E117/
+            echom 'Please install https://github.com/tenfyzhong/mode.vim first'
+            return
+        endtry
+    endif
 endfunction
 
 function! s:enable()
-    if s:enabled == 1
-        return
-    endif
 
-    let s:enabled = 1
     let &virtualedit = 'all'
-    let s:stores = <SID>store_map(s:mappings)
-    call <SID>map(s:mappings)
+    call mode#enable('boxdraw')
 endfunction
 
 function! s:disable()
-    if s:enabled == 0
-        return
-    endif
-
-    let s:enabled = 0
     let &virtualedit = s:virtualedit
-    call <SID>unmap(s:mappings)
-    call <SID>restore_mappings(s:stores)
+    call mode#disable('boxdraw')
 endfunction
 
 function! s:toggle()
@@ -186,22 +145,14 @@ function! s:toggle()
     endif
 endfunction
 
+call <SID>init()
+
 " command
 command! BoxdrawEnable call <SID>enable()
 command! BoxdrawDisable call <SID>disable()
 command! BoxdrawToggle call <SID>toggle()
 
+
 " mapping
 nnoremap <silent> <Plug>(boxdraw-toggle) :<C-u>BoxdrawToggle<cr>
 
-" status line
-function! BoxdrawStatusLine()
-    return s:enabled ? 'B' : ''
-endfunction
-
-function! boxdraw#AirlineStatus()
-    call airline#parts#define_function('boxdraw', 'BoxdrawStatusLine')
-    let g:airline_section_warning .= airline#section#create_right(['boxdraw'])
-endfunction
-
-" vim:shiftwidth=4:softtabstop=4
